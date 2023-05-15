@@ -4,7 +4,7 @@ import AddProductForm from "./AddProductForm";
 import Product from "./Product";
 
 const Products = () => {
-  const products = useSelector((state) => state.products.products);
+  const products = useSelector((state) => state.ecommerce.products);
   return (
     <div className="py-16">
       <div className="productWrapper">

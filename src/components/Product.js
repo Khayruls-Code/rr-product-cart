@@ -6,7 +6,6 @@ const Product = ({ product }) => {
   const { name, category, img, quantity, price, id } = product;
   const dispatch = useDispatch();
   const handleAddCart = (id) => {
-    console.log(id);
     dispatch(addToCart(id));
   };
   return (
@@ -23,7 +22,11 @@ const Product = ({ product }) => {
             QTY <span className="lws-quantity">{quantity}</span>
           </p>
         </div>
-        <button onClick={() => handleAddCart(id)} className="lws-btnAddToCart">
+        <button
+          disabled={quantity === 0 && true}
+          onClick={() => handleAddCart(id)}
+          className="lws-btnAddToCart"
+        >
           Add To Cart
         </button>
       </div>

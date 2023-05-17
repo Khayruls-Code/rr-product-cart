@@ -1,6 +1,10 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { decreaseCartQuan, increaseCartQuan } from "../redux/product/actions";
+import {
+  decreaseCartQuan,
+  deleteProduct,
+  increaseCartQuan,
+} from "../redux/product/actions";
 
 const CartItems = ({ product }) => {
   const dispatch = useDispatch();
@@ -29,7 +33,7 @@ const CartItems = ({ product }) => {
         {/* amount buttons */}
         <div className="flex items-center space-x-4">
           <button
-            onClick={handleIncrease(product.id)}
+            onClick={() => handleIncrease(product.id)}
             className="lws-incrementQuantity"
           >
             <i className="text-lg fa-solid fa-plus"></i>
@@ -52,7 +56,10 @@ const CartItems = ({ product }) => {
       </div>
       {/* delete button */}
       <div className="flex items-center justify-center col-span-2 mt-4 md:justify-end md:mt-0">
-        <button className="lws-removeFromCart">
+        <button
+          onClick={() => dispatch(deleteProduct(product.id))}
+          className="lws-removeFromCart"
+        >
           <i className="text-lg text-red-400 fa-solid fa-trash"></i>
         </button>
       </div>

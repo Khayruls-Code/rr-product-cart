@@ -2,6 +2,7 @@ import {
   ADDED,
   ADDED_CART,
   DECREASE_QUANTITY,
+  DELETE,
   INCREASE_QUANTITY,
 } from "./actionTypes";
 
@@ -21,7 +22,7 @@ const iniqueId = (products) => {
 
 const decreseQunatity = (products, id) => {
   return products.map((product) => {
-    if (product.id === id) {
+    if (product.id === id && product.quantity > 0) {
       return {
         ...product,
         quantity: product.quantity - 1,
@@ -34,7 +35,7 @@ const decreseQunatity = (products, id) => {
 
 const increseQunatity = (products, id) => {
   return products.map((product) => {
-    if (product.id === id) {
+    if (product.id === id && product.quantity < product.initialStock - 1) {
       return {
         ...product,
         quantity: product.quantity + 1,
@@ -52,7 +53,11 @@ const productReducer = (state = initialState, action) => {
         ...state,
         products: [
           ...state.products,
-          { ...action.payload, id: iniqueId(state.products) },
+          {
+            ...action.payload,
+            id: iniqueId(state.products),
+            initialStock: action.payload.quantity,
+          },
         ],
       };
     case ADDED_CART:
@@ -116,7 +121,7 @@ const productReducer = (state = initialState, action) => {
       return {
         ...state,
         cart: state.cart.map((product) => {
-          if (product.id === action.payload) {
+          if (product.id === action.payload && product.quantity !== 1) {
             return {
               ...product,
               quantity: product.quantity - 1,
@@ -125,6 +130,24 @@ const productReducer = (state = initialState, action) => {
           return { ...product };
         }),
         products: increseQunatity(state.products, action.payload),
+      };
+
+    case DELETE:
+      const deletedProduct = state.cart.find(
+        (product) => product.id === action.payload
+      );
+      return {
+        ...state,
+        cart: state.cart.filter((product) => product.id !== action.payload),
+        products: state.products.map((product) => {
+          if (product.id === deletedProduct.id) {
+            return {
+              ...product,
+              quantity: product.quantity + deletedProduct.quantity,
+            };
+          }
+          return { ...product };
+        }),
       };
     default:
       return state;
